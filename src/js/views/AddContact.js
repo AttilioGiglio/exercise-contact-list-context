@@ -1,61 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 export const AddContact = () => {
+	const [newContact, setNewContact] = useState();
 
-	const [item, guardarItem] = useState({});
-
-	//sacar datos
-	const handleChange = e => {
-		//actualizar state
-		guardarItem({
-			...item,
-			[e.target.name]: e.target.value
-		})
-	};
-	//registrar datos
-	const handleSubmit = e => {
-		e.preventDefault();
-		console.log(e);
-	};
+	const { store, actions } = useContext(Context);
 
 	return (
 		<div className="container">
 			<div>
 				<h1 className="text-center mt-5"> Add a new contact </h1>{" "}
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={e => actions.handleSubmit(e)}>
 					<div className="form-group">
 						<label> Full Name </label>{" "}
-						<input type="text" name='name' className="form-control" placeholder="Full Name" onChange={handleChange} />{" "}
+						<input
+							type="text"
+							name="fullName"
+							value={store.fullname}
+							className="form-control"
+							placeholder="Full Name"
+							onChange={e => actions.handleChange(e)}
+						/>{" "}
 					</div>{" "}
 					<div className="form-group">
 						<label> Email </label>{" "}
 						<input
 							type="email"
-							name='email'
+							name="email"
+							value={store.email}
 							className="form-control"
 							placeholder="Enter email"
-							onChange={handleChange}
+							onChange={e => actions.handleChange(e)}
 						/>{" "}
 					</div>{" "}
 					<div className="form-group">
 						<label> Phone </label>{" "}
 						<input
 							type="phone"
-							name='phone'
+							name="phone"
+							value={store.phone}
 							className="form-control"
 							placeholder="Enter phone"
-							onChange={handleChange}
+							onChange={e => actions.handleChange(e)}
 						/>{" "}
 					</div>{" "}
 					<div className="form-group">
 						<label> Address </label>{" "}
 						<input
 							type="text"
-							name='address'
+							name="address"
+							value={store.address}
 							className="form-control"
 							placeholder="Enter address"
-							onChange={handleChange}
+							onChange={e => actions.handleChange()}
 						/>{" "}
 					</div>{" "}
 					<button type="submit" className="btn btn-primary form-control">
