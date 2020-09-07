@@ -1,12 +1,14 @@
 // se tiene que modificar
-import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+// import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Context } from "../store/appContext";
 
 export const Modal = props => {
-	const [state, setState] = useState({
-		//initialize state here
-	});
+	const [state, setState] = useState({});
+	const { store, actions } = useContext(Context);
+	// const { id } = props;
+	// console.log(id);
 	return (
 		<div className="modal" tabIndex="-1" role="dialog" style={{ display: props.show ? "inline-block" : "none" }}>
 			<div className="modal-dialog" role="document">
@@ -33,7 +35,14 @@ export const Modal = props => {
 						<button type="button" className="btn btn-primary">
 							Oh no!
 						</button>
-						<button type="button" className="btn btn-secondary" data-dismiss="modal">
+						<button
+							type="button"
+							onClick={e => {
+								actions.handleDelete(e, store.contact.id);
+								props.onClose();
+							}}
+							className="btn btn-secondary"
+							data-dismiss="modal">
 							Do it!
 						</button>
 					</div>
@@ -49,7 +58,8 @@ export const Modal = props => {
 Modal.propTypes = {
 	history: PropTypes.object,
 	onClose: PropTypes.func,
-	show: PropTypes.bool
+	show: PropTypes.bool,
+	contact: PropTypes.object
 };
 
 /**

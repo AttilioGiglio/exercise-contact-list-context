@@ -1,10 +1,12 @@
-// se tiene que modificar
-
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			contacts: [],
-			newContact: {}
+			full_name: null,
+			email: null,
+			agenda_slug: "padawan_agenda",
+			address: null,
+			phone: null
 		},
 		actions: {
 			//(Arrow) Functions that update the Store
@@ -38,50 +40,82 @@ const getState = ({ getStore, getActions, setStore }) => {
 			postContact2: () => {
 				//To access to data from the store(obj), use getstore. You will use frequently to change the data stored.
 				const store = getStore();
-				const { contacts } = store;
 				const requestOptions = {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(contacts[contact])
+					body: JSON.stringify({
+						full_name: store.full_name,
+						email: store.email,
+						agenda_slug: store.agenda_slug,
+						address: store.address,
+						phone: store.phone
+					})
 				};
 				fetch("https://assets.breatheco.de/apis/fake/contact/", requestOptions)
 					.then(response => response.json())
-					.then(data => (store.contacts = data));
+					.then(data => data);
 			},
 			handleChange: e => {
 				const store = getStore();
-				const { newContact } = store;
-
 				setStore({
 					[e.target.name]: e.target.value
 				});
+				console.log(store.phone, store.full_name, store.address, store.email);
 			},
-			handleSubmit: e => {
+			handleClickSubmit: e => {
 				e.preventDefault();
 				getActions().postContact2();
 			},
 			// Update
 			putContact: id => {
 				const store = getStore();
-				const { contacts } = store;
 				const requestOptions = {
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(contacts)
+					body: JSON.stringify({
+						full_name: store.full_name,
+						email: store.email,
+						agenda_slug: store.agenda_slug,
+						address: store.address,
+						phone: store.phone
+					})
 				};
-				fetch("https://assets.breatheco.de/apis/fake/contact/" + id, requestOptions)
+				fetch(`https://assets.breatheco.de/apis/fake/contact/${id}`, requestOptions)
 					.then(response => response.json())
-					.then(data => (store.contacts = data));
+					.then(data => setStore(data));
+			},
+			handleClickUpdate: (e, id) => {
+				e.preventDefault();
+				getActions().putContact(id);
+				console.log(id);
 			},
 			// Delete
-			deleteContact: () => {
+			deleteContact: id => {
 				const store = getStore();
 				const requestOptions = {
-					method: "DELETE"
+					method: "DELETE",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						full_name: store.full_name,
+						email: store.email,
+						agenda_slug: store.agenda_slug,
+						address: store.address,
+						phone: store.phone
+					})
 				};
-				fetch("https://assets.breatheco.de/apis/fake/contact/", requestOptions)
+				fetch(`https://assets.breatheco.de/apis/fake/contact/${id}`, requestOptions)
 					.then(response => response.json())
-					.then(data => (store.contacts = data));
+					.then(data => getActions().getContacts());
+			},
+
+			handleSetContact: contact => {
+				setStore({ contact: contact });
+			},
+
+			handleDelete: (e, id) => {
+				e.preventDefault();
+				getActions().deleteContact(id);
+				console.log(e);
 			}
 		}
 	};

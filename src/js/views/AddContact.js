@@ -1,22 +1,23 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
+import PropTypes from "prop-types";
 
-export const AddContact = () => {
-	const [newContact, setNewContact] = useState();
-
+export const AddContact = props => {
 	const { store, actions } = useContext(Context);
+
+	const { params } = props.match;
 
 	return (
 		<div className="container">
 			<div>
 				<h1 className="text-center mt-5"> Add a new contact </h1>{" "}
-				<form onSubmit={e => actions.handleSubmit(e)}>
+				<form>
 					<div className="form-group">
 						<label> Full Name </label>{" "}
 						<input
 							type="text"
-							name="fullName"
+							name="full_name"
 							value={store.fullname}
 							className="form-control"
 							placeholder="Full Name"
@@ -53,11 +54,20 @@ export const AddContact = () => {
 							value={store.address}
 							className="form-control"
 							placeholder="Enter address"
-							onChange={e => actions.handleChange()}
+							onChange={e => actions.handleChange(e)}
 						/>{" "}
 					</div>{" "}
-					<button type="submit" className="btn btn-primary form-control">
-						save{" "}
+					<button
+						type="submit"
+						className="btn btn-primary form-control mb-3"
+						onClick={e => actions.handleClickSubmit(e)}>
+						submit{" "}
+					</button>{" "}
+					<button
+						type="submit"
+						className="btn btn-primary form-control mb-3"
+						onClick={e => actions.handleClickUpdate(e, params.id)}>
+						update{" "}
 					</button>{" "}
 					<Link className="mt-3 w-100 text-center" to="/">
 						or get back to contacts{" "}
@@ -66,4 +76,13 @@ export const AddContact = () => {
 			</div>{" "}
 		</div>
 	);
+};
+
+AddContact.propTypes = {
+	match: PropTypes.shape({
+		params: PropTypes.shape({
+			id: PropTypes.number.isRequired
+		})
+	}),
+	params: PropTypes.any
 };

@@ -12,12 +12,6 @@ export const Contacts = () => {
 
 	const { store, actions } = useContext(Context);
 
-	// const [contact, setContact] = useState([])
-
-	// useEffect()
-
-	// La lista se hace aca, el map..
-
 	return (
 		<div className="container">
 			<div>
@@ -35,6 +29,7 @@ export const Contacts = () => {
 										key={index}
 										onDelete={() => setState({ showModal: true })}
 										contact={item}
+										id={item.id}
 									/>
 								);
 							})}
